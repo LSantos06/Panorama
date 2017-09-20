@@ -1,6 +1,6 @@
 
 % Load images.
-imgs = fullfile('imagens_praca3poderes');
+imgs = fullfile('imagens_praca3poderes_menores');
 imgSet = imageSet(imgs);
 
 % Display images to be stitched

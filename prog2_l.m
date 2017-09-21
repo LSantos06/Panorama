@@ -68,32 +68,11 @@ for n = 2:numImages
     % Mostra os inliers obtidos a partir da homografia aproximada
     figure(5), showMatchedFeatures(imgPrevious, img, inlierPtsPrev, inlierPts),title( ['Pontos de interesse em comum entre a Imagem ' num2str(n-1) '(R) e a Imagem ' num2str(n) '(GB), sem outliers' ] ), legend(['Pontos de interesse da Imagem ' num2str(n-1) ], ['Pontos de interesse da Imagem ' num2str(n) ]),  pause;
     
-    % Homografias de cada imagem, com inicio na Primeira Imagem (Possui propagacao de erros)
-    homographies(n).T = homographies(n-1).T * homographies(n).T;
 end
 
 % Tamanho da imagem (igual para todas) e numero total de homografias
 imageSize = size(img); 
 numHomographies = numel(homographies);
-
-%% Alterando o inicio das homografias para a imagem central
-for i = 1:numHomographies
-    [xlim(i,:), ylim(i,:)] = outputLimits(homographies(i), [1 imageSize(2)], [1 imageSize(1)]);
-end
-
-avgXLim = mean(xlim, 2);
-
-[~, idx] = sort(avgXLim);
-
-centerIdx = floor((numel(homographies)+1)/2);
-
-centerImageIdx = idx(centerIdx);
-
-Tinv = invert(homographies(centerImageIdx));
-
-for i = 1:numHomographies
-    homographies(i).T = homographies(i).T * Tinv.T;
-end
 
 %% Inicializacao do Panorama
 for i = 1:numHomographies

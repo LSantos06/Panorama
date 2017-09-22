@@ -10,9 +10,8 @@ clear all;
 close all;
 
 %% Imagens a serem processadas
-imgs = fullfile('imagens_jogos');
+imgs = fullfile('imagens_praca3poderes');
 imgSet = imageSet(imgs);
-%numImages = 5; 
 numImages = imgSet.Count;
 center = ceil(numImages/2);
 
@@ -128,12 +127,12 @@ for m = (center-1):-1:1
 end
 
 %% Inicializacao do Panorama
-
 % Tamanho da imagem (igual para todas) e numero total de homografias
 imageSize = size(img); 
 numHomographies = numel(homographies);
 
 %% Tamanho do Panorama
+% Computando os limites das homografias calculadas para obter o tamanho
 for i = 1:numHomographies
     [xlim(i,:), ylim(i,:)] = outputLimits(homographies(i), [1 imageSize(2)], [1 imageSize(1)]);
 end
@@ -160,18 +159,17 @@ yLimits = [yMin yMax];
 panoramaView = imref2d([height width], xLimits, yLimits);
 
 for i = 1:numImages
-
     img = read(imgSet, i);
 
     % Transforma a imagem para o plano do panorama
     warpedImage = imwarp(img, homographies(i), 'OutputView', panoramaView);
     figure(), imshow(warpedImage), pause;
-
     mask = imwarp(true(size(img,1),size(img,2)), homographies(i), 'OutputView', panoramaView);
-    %figure(7), imshow(mask), pause;
     
+    % Sobreposicao das imagens no panorama
     panorama = step(blender, panorama, warpedImage, mask);
 end
 
+% Resultado final 
 figure()
 imshow(panorama)

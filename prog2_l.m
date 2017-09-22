@@ -12,7 +12,7 @@ close all;
 %% Imagens a serem processadas
 imgs = fullfile('imagens_praca3poderes_menores');
 imgSet = imageSet(imgs);
-numImages = 4;%imgSet.Count;
+numImages = 5;%imgSet.Count;
 center = ceil(numImages/2);
 
 % Mostra as imagens que serao processadas
@@ -34,7 +34,7 @@ points = detectSURFFeatures(grayImage);
 for n = (center+1):1:numImages
     %% Imagem (n-1)
     % Le a imagem (n-1).
-    imgPrevious = readimage(imgSet, n-1);
+    imgPrevious = read(imgSet, n-1);
     % Guarda os pontos e features da imagem (n-1).
     pointsPrevious = points;
     featuresPrevious = features;
@@ -45,7 +45,7 @@ for n = (center+1):1:numImages
 
     %% Imagem (n)
     % Le a imagem (n).
-    img = readimage(imgSet, n);
+    img = read(imgSet, n);
     % Detectando features e pontos para a imagem (n)
     grayImage = rgb2gray(img);
     points = detectSURFFeatures(grayImage);
@@ -76,7 +76,7 @@ end
 
 %% Imagem Central
 % Leitura da Imagem Central
-img = readimage(imgSet, center);
+img = read(imgSet, center);
 % Detectando features e pontos para a Imagem Central
 grayImage = rgb2gray(img);
 points = detectSURFFeatures(grayImage);
@@ -86,7 +86,7 @@ points = detectSURFFeatures(grayImage);
 for m = (center-1):-1:1
     %% Imagem (m+1)
     % Le a imagem (m+1).
-    imgPrevious = readimage(imgSet, m+1);
+    imgPrevious = read(imgSet, m+1);
     % Guarda os pontos e features da imagem (m+1).
     pointsPrevious = points;
     featuresPrevious = features;
@@ -97,7 +97,7 @@ for m = (center-1):-1:1
 
     %% Imagem (m)
     % Le a imagem (m).
-    img = readimage(imgSet, m);
+    img = read(imgSet, m);
     % Detectando features e pontos para a imagem (m)
     grayImage = rgb2gray(img);
     points = detectSURFFeatures(grayImage);
@@ -132,6 +132,7 @@ end
 imageSize = size(img); 
 numHomographies = numel(homographies);
 
+%% Tamanho do Panorama
 for i = 1:numHomographies
     [xlim(i,:), ylim(i,:)] = outputLimits(homographies(i), [1 imageSize(2)], [1 imageSize(1)]);
 end
@@ -145,20 +146,21 @@ yMax = max([imageSize(1); ylim(:)]);
 width  = round(xMax - xMin);
 height = round(yMax - yMin);
 
-% Definicao do tamanho do panorama
+% Inicializacao do Panorama com zeros (Preto)
 panorama = zeros([height width 3], 'like', img);
 
 %% Construcao do panorama
 blender = vision.AlphaBlender('Operation', 'Binary mask', ...
     'MaskSource', 'Input port');
 
+% Create a 2-D spatial reference object defining the size of the panorama.
 xLimits = [xMin xMax];
 yLimits = [yMin yMax];
 panoramaView = imref2d([height width], xLimits, yLimits);
 
 for i = 1:numImages
 
-    img = readimage(imgSet, i);
+    img = read(imgSet, i);
 
     % Transforma a imagem para o plano do panorama
     warpedImage = imwarp(img, homographies(i), 'OutputView', panoramaView);

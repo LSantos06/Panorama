@@ -10,9 +10,10 @@ clear all;
 close all;
 
 %% Imagens a serem processadas
-imgs = fullfile('imagens_praca3poderes_menores');
+imgs = fullfile('imagens_jogos');
 imgSet = imageSet(imgs);
-numImages = 5;%imgSet.Count;
+%numImages = 5; 
+numImages = imgSet.Count;
 center = ceil(numImages/2);
 
 % Mostra as imagens que serao processadas
@@ -23,7 +24,7 @@ homographies(numImages) = projective2d(eye(3));
 
 %% Imagem Central
 % Leitura da Imagem Central
-img = readimage(imgSet, center);
+img = read(imgSet, center);
 % Detectando features e pontos para a Imagem Central
 grayImage = rgb2gray(img);
 points = detectSURFFeatures(grayImage);

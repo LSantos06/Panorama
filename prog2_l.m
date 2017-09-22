@@ -10,10 +10,10 @@ clear all;
 close all;
 
 %% Imagens a serem processadas
-imgs = fullfile('imagens_predio');
+imgs = fullfile('imagens_praca3poderes_menores');
 imgSet = imageSet(imgs);
-numImages = imgSet.Count;
-center = round(numImages/2);
+numImages = 4;%imgSet.Count;
+center = ceil(numImages/2);
 
 % Mostra as imagens que serao processadas
 figure(1), montage(imgSet.ImageLocation), title('Imagens originais'), pause;
@@ -22,16 +22,16 @@ figure(1), montage(imgSet.ImageLocation), title('Imagens originais'), pause;
 homographies(numImages) = projective2d(eye(3));
 
 %% Imagem Central
-% Leitura da Primeira Imagem
+% Leitura da Imagem Central
 img = readimage(imgSet, center);
-% Detectando features e pontos para a imagem (1)
+% Detectando features e pontos para a Imagem Central
 grayImage = rgb2gray(img);
 points = detectSURFFeatures(grayImage);
 [features, points] = extractFeatures(grayImage, points);
 
 %% Imagens subsequentes em pares
 %% Centro para a direita
-for n = (center-1):1:numImages
+for n = (center+1):1:numImages
     %% Imagem (n-1)
     % Le a imagem (n-1).
     imgPrevious = readimage(imgSet, n-1);
@@ -74,8 +74,16 @@ for n = (center-1):1:numImages
     disp(homographies(n).T);
 end
 
+%% Imagem Central
+% Leitura da Imagem Central
+img = readimage(imgSet, center);
+% Detectando features e pontos para a Imagem Central
+grayImage = rgb2gray(img);
+points = detectSURFFeatures(grayImage);
+[features, points] = extractFeatures(grayImage, points);
+
 %% Centro para a esquerda
-for m = (center+1):-1:1
+for m = (center-1):-1:1
     %% Imagem (m+1)
     % Le a imagem (m+1).
     imgPrevious = readimage(imgSet, m+1);
@@ -87,8 +95,8 @@ for m = (center+1):-1:1
     % Mostrando os pontos de interesse da imagem
     figure(2), imshow(imgPrevious), hold on, title( ['Pontos de interesse da Imagem ' num2str(m+1) ] ), strongestPointsPrev.plot('showOrientation',true), pause;
 
-    %% Imagem (n)
-    % Le a imagem (n).
+    %% Imagem (m)
+    % Le a imagem (m).
     img = readimage(imgSet, m);
     % Detectando features e pontos para a imagem (m)
     grayImage = rgb2gray(img);
@@ -154,7 +162,7 @@ for i = 1:numImages
 
     % Transforma a imagem para o plano do panorama
     warpedImage = imwarp(img, homographies(i), 'OutputView', panoramaView);
-    figure(6), imshow(warpedImage), pause;
+    figure(), imshow(warpedImage), pause;
 
     mask = imwarp(true(size(img,1),size(img,2)), homographies(i), 'OutputView', panoramaView);
     %figure(7), imshow(mask), pause;
@@ -162,5 +170,5 @@ for i = 1:numImages
     panorama = step(blender, panorama, warpedImage, mask);
 end
 
-figure(7)
+figure()
 imshow(panorama)

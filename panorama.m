@@ -10,7 +10,7 @@ clear all;
 close all;
 
 %% Imagens a serem processadas
-imgs = fullfile('imagens_praca3poderes');
+imgs = fullfile('imagens_montanha');
 imgSet = imageSet(imgs);
 numImages = imgSet.Count;
 center = ceil(numImages/2);

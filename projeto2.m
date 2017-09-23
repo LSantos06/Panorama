@@ -10,10 +10,10 @@ clear all;
 close all;
 
 %% Imagens a serem processadas
-imgs = fullfile('imagens_montanha');
+imgs = fullfile('imagens_praca3poderes_2');
 imgSet = imageSet(imgs);
 numImages = imgSet.Count;
-center = ceil(numImages/2);
+center = round(numImages/2);
 
 % Mostra as imagens que serao processadas
 figure(1), montage(imgSet.ImageLocation), title('Imagens originais'), pause;

@@ -10,10 +10,10 @@ clear all;
 close all;
 
 %% Modo de debug para vizualização passo-a-passo do algoritmo
-debug = false;
+debug = true;
 
 %% Imagens a serem processadas
-imgs = fullfile('imagens_praca3poderes1');
+imgs = fullfile('imagens_jogos');
 %imgs = fullfile('imagens_praca3poderes2');
 %imgs = fullfile('imagens_jogos');
 %imgs = fullfile('imagens_predio');
@@ -88,7 +88,6 @@ for n = (center+1):1:numImages
     %% Acumulacao das transformadas
     homographies(n).T = homographies(n-1).T * homographies(n).T;
     if(debug)
-        disp(['homographies(',num2str(n),').T']);
         disp(homographies(n).T);
     end
 end
@@ -151,7 +150,7 @@ for m = (center-1):-1:1
     %% Acumulacao das transformadas
     homographies(m).T = homographies(m+1).T * homographies(m).T;
     if(debug)
-        disp(['homographies(',num2str(m),').T:']);
+        print('homographies(%d).T\n',n);
         disp(homographies(m).T);
     end
 end
@@ -194,7 +193,7 @@ for i = 1:numImages
     % Transforma a imagem para o plano do panorama
     warpedImage = imwarp(img, homographies(i), 'OutputView', panoramaView);
     if(debug)
-        figure(), imshow(warpedImage), title( ['Imagem ', num2str(i), ' transformada'] ), pause;
+        figure(), imshow(warpedImage), pause;
     end
     mask = imwarp(true(size(img,1),size(img,2)), homographies(i), 'OutputView', panoramaView);
     
@@ -204,4 +203,4 @@ end
 
 % Resultado final 
 figure()
-imshow(panorama), title( ['Resultado Final'] )
+imshow(panorama)

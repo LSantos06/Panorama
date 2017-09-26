@@ -9,12 +9,11 @@
 clear all;
 close all;
 
-%% Modo de debug para vizualização passo-a-passo do algoritmo
+%% Modo de debug para vizualizacao passo a passo do algoritmo
 debug = false;
 
 %% Imagens a serem processadas
-imgs = fullfile('imagens_praca3poderes1');
-%imgs = fullfile('imagens_praca3poderes2');
+imgs = fullfile('imagens_praca3poderes2');
 %imgs = fullfile('imagens_jogos');
 %imgs = fullfile('imagens_predio');
 %imgs = fullfile('imagens_montanha');
@@ -204,4 +203,4 @@ end
 
 % Resultado final 
 figure()
-imshow(panorama), title( ['Resultado Final'] )
+imshow(panorama), title('Resultado Final');
